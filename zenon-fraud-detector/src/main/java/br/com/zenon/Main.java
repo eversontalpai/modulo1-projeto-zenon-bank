@@ -1,6 +1,7 @@
 package br.com.zenon;
 
 import br.com.zenon.fraud.Transaction;
+import br.com.zenon.model.Customer;
 import br.com.zenon.model.enumerate.Type;
 import br.com.zenon.reader.CsvReader;
 
@@ -23,12 +24,16 @@ public class Main {
                                 coluns[0],
                                 Type.valueOf(coluns[1]),
                                 new BigDecimal(coluns[2]),
-                                coluns[3],
-                                new BigDecimal(coluns[4]),
-                                new BigDecimal(coluns[5]),
-                                coluns[6],
-                                new BigDecimal(coluns[7]),
-                                new BigDecimal(coluns[8]),
+                                new Customer(
+                                        coluns[3],
+                                        new BigDecimal(coluns[4]),
+                                        new BigDecimal(coluns[5])
+                                        ),
+                                new Customer(
+                                        coluns[6],
+                                        new BigDecimal(coluns[7]),
+                                        new BigDecimal(coluns[8])
+                                        ),
                                 Boolean.parseBoolean(coluns[9]),
                                 Boolean.parseBoolean(coluns[10])
 
@@ -37,7 +42,7 @@ public class Main {
                     })
                     .toList();
             IO.println("Quantidade: "+transactions.size());
-            transactions.forEach(IO::println);
+            transactions.stream().limit(10).forEach(IO::println);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

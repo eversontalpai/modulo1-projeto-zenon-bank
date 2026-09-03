@@ -24,7 +24,7 @@ public class CsvReader {
                             ));
 
         }
-        return Files.readAllLines(csvFile).stream().skip(1).toList();
+        return Files.readAllLines(csvFile).stream().skip(1).limit(1000).toList();
 
     }
 
