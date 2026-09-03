@@ -6,11 +6,12 @@ import br.com.zenon.model.enumerate.Type;
 import java.math.BigDecimal;
 
 public record Transaction(
-        String step,
+        Integer step,
         Type type,
         BigDecimal amount,
         Customer origin,
         Customer recipient,
         boolean isFraud,
         boolean isFlaggedFraud) {
+
 }
