@@ -34,8 +34,8 @@ public class TransactionalRepositoryImpl implements TransactionRepository{
                                             new BigDecimal(coluns[7]),
                                             new BigDecimal(coluns[8])
                                     ),
-                                    Boolean.parseBoolean(coluns[9]),
-                                    Boolean.parseBoolean(coluns[10])
+                                   coluns[9].equals("1"),
+                                   coluns[10].equals("1")
 
 
                             ));
