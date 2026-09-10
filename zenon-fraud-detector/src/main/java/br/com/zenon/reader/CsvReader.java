@@ -8,30 +8,12 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class CsvReader {
+    private static final String PATH = "/Users/eversontalpai/projetos/pessoal/modulo1-projeto-zenon-bank/data/";
 
-    public List<String> readCsv(String folderPath) throws IOException {
-        Path folder = Path.of(folderPath);
-        Path csvFile;
-
-        try(Stream<Path> files = Files.list(folder)){
-            csvFile = files
-                    .filter(Files::isRegularFile)
-                    .filter(file-> isCsv(file))
-                    .findFirst()
-                    .orElseThrow(()->
-                            new IllegalArgumentException(
-                                    "Nenhum arquivo csv encontrado em:" + folderPath
-                            ));
-
-        }
-        return Files.readAllLines(csvFile).stream().skip(1).limit(1000).toList();
+    public static List<String> readCsv(String csvFileName, int limit) throws IOException {
+        Path csvFile = Path.of(PATH.concat(csvFileName));
+        return Files.readAllLines(csvFile).stream().skip(1).limit(limit).toList();
 
     }
 
-    private boolean isCsv(Path file) {
-        return file.getFileName()
-                .toString()
-                .toLowerCase()
-                .endsWith(".csv");
-    }
 }
