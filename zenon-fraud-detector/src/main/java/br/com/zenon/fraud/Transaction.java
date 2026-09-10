@@ -14,4 +14,12 @@ public record Transaction(
         boolean isFraud,
         boolean isFlaggedFraud) {
 
+    public Transaction {
+        if(step <= 0){
+            throw new IllegalArgumentException("step should be positive: "+step);
+        }
+        if(BigDecimal.ZERO.compareTo(amount) > 0){
+            throw new IllegalArgumentException("amount should be positive: "+amount);
+        }
+    }
 }
