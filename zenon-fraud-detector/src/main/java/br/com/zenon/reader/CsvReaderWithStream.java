@@ -3,14 +3,14 @@ package br.com.zenon.reader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
+import java.util.stream.Stream;
 
-public class CsvReader {
+public class CsvReaderWithStream {
     private static final String PATH = "data/";
 
-    public static List<String> readCsv(String csvFileName, int limit) throws IOException {
+    public static Stream<String> readCsv(String csvFileName) throws IOException {
         Path csvFile = Path.of(PATH.concat(csvFileName));
-        return Files.readAllLines(csvFile).stream().skip(1).limit(limit).toList();
+        return Files.lines(csvFile).skip(1);
 
     }
 

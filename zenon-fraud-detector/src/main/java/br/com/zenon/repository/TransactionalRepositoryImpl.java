@@ -1,29 +1,25 @@
 package br.com.zenon.repository;
 
 import br.com.zenon.fraud.Transaction;
-import br.com.zenon.model.Customer;
-import br.com.zenon.model.enumerate.Type;
 import br.com.zenon.reader.CsvReader;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 public class TransactionalRepositoryImpl implements TransactionRepository{
-
     private final List<Transaction> transactions;
 
     public TransactionalRepositoryImpl(String fileName, int limit) {
-        this.transactions = process(fileName,limit);
+        this.transactions = read(fileName,limit);
     }
 
-    private List<Transaction> process(String fileName, int limit) {
+    private List<Transaction> read(String fileName, int limit) {
         try {
-            List<String> lines = CsvReader.readCsv(fileName, limit);
-            return lines.parallelStream()
-                        .map(this::creatTransaction)
+            return CsvReader.readCsv(fileName,limit)
+                    .parallelStream()
+                    .map(Transaction::creatTransaction)
                     .filter(Objects::nonNull)
                     .toList();
         } catch (IOException e) {
@@ -33,41 +29,17 @@ public class TransactionalRepositoryImpl implements TransactionRepository{
 
     @Override
     public List<Transaction> findAll() {
-        return transactions;
+            return transactions;
     }
+
 
     @Override
     public Optional<Transaction> findByName(String name) {
-        return transactions.stream()
-                .filter(transaction -> transaction.origin().name().equals(name))
-                .findAny();
+            return transactions
+                    .stream()
+                    .filter(transaction -> transaction.origin().name().equals(name))
+                    .findAny();
     }
 
-    private Transaction creatTransaction(String line) {
-        try {
-            String[] coluns = line.split(",");
-            return new Transaction(
-                    Integer.parseInt(coluns[0]),
-                    Type.valueOf(coluns[1]),
-                    new BigDecimal(coluns[2]),
-                    new Customer(
-                            coluns[3],
-                            new BigDecimal(coluns[4]),
-                            new BigDecimal(coluns[5])
-                    ),
-                    new Customer(
-                            coluns[6],
-                            new BigDecimal(coluns[7]),
-                            new BigDecimal(coluns[8])
-                    ),
-                    coluns[9].equals("1"),
-                    coluns[10].equals("1")
 
-
-            );
-        }catch (IllegalArgumentException e){
-            IO.println( "Erro: "+ line + e.getClass().getName()+": "+e.getMessage());
-        }
-        return null;
-    }
 }

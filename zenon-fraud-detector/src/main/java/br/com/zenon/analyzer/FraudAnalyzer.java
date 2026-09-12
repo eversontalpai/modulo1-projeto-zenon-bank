@@ -56,11 +56,11 @@ public class FraudAnalyzer {
 
     }
 
-    public Map<Type,Integer> countByType(){
+    public Map<Type,Long> countByType(){
         return transactionsIsFraud.stream()
                 .filter(Transaction::isFraud)
                 .collect(Collectors.groupingBy(Transaction::type,
-                        Collectors.summingInt(transaction -> 1)));
+                        Collectors.summingLong(transaction -> 1L)));
 
     }
 

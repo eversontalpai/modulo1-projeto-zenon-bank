@@ -2,6 +2,7 @@ package br.com.zenon;
 
 import br.com.zenon.analyzer.FraudAnalyzer;
 import br.com.zenon.fraud.Transaction;
+import br.com.zenon.report.TransactionReport;
 import br.com.zenon.repository.TransactionRepository;
 import br.com.zenon.repository.TransactionalRepositoryImpl;
 import br.com.zenon.repository.TransactionalRepositoryMapImpl;
@@ -15,10 +16,16 @@ public class Main {
     static void main() {
 
 //        fixErrors(repository);
-//        analyzerFraud(repository);
-        calculateBenchmark();
+//        analyzerFraud();
+//        calculateBenchmark();
+        printReport();
 
 
+    }
+
+    private static void printReport() {
+        TransactionReport report = new TransactionReport("PS_20174392719_1491204439457_log.csv");
+        report.printReport();
     }
 
     private static void calculateBenchmark() {
@@ -56,25 +63,21 @@ public class Main {
         analyzer.countByType().forEach((key, value) -> IO.println("   - " + key + ": " + value));
     }
     private static void benchmark() {
-        TransactionRepository repository = new TransactionalRepositoryImpl("PS_20174392719_1491204439457_log.csv", 100_000);
+        TransactionRepository repository = new TransactionalRepositoryImpl("PS_20174392719_1491204439457_log.csv", 10_000_000);
         findName(repository);
 
     }
 
     private static void benchmarkWithMap() {
-        TransactionRepository repository = new TransactionalRepositoryMapImpl("PS_20174392719_1491204439457_log.csv", 100_000);
+        TransactionRepository repository = new TransactionalRepositoryMapImpl("PS_20174392719_1491204439457_log.csv", 10_000_000);
         findName(repository);
     }
 
     private static void findName(TransactionRepository repository) {
         List<String> names = List.of("C1231006815","C12345");
         names.forEach(name->{
-            try {
-                IO.println(repository.findByName(name)
-                        .orElseThrow(()-> new RuntimeException("Transação não encontrada para o cliente "+name)));
-            } catch (RuntimeException e) {
-                IO.println(e.getMessage());
-            }
+                repository.findByName(name)
+                        .ifPresentOrElse(IO::println,()-> IO.println("Transação não encontrada para o cliente "+name));
         });
     }
 
