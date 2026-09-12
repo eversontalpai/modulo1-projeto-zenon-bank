@@ -8,24 +8,31 @@ import br.com.zenon.reader.CsvReader;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-public class TransactionalRepositoryImpl implements TransactionRepository{
+public class TransactionalRepositoryMapImpl implements TransactionRepository{
 
-    private final List<Transaction> transactions;
+    private final Map<String,Transaction> transactions;
 
-    public TransactionalRepositoryImpl(String fileName, int limit) {
+    public TransactionalRepositoryMapImpl(String fileName, int limit) {
         this.transactions = process(fileName,limit);
     }
 
-    private List<Transaction> process(String fileName, int limit) {
+    private Map<String, Transaction> process(String fileName, int limit) {
         try {
             List<String> lines = CsvReader.readCsv(fileName, limit);
             return lines.parallelStream()
                         .map(this::creatTransaction)
                     .filter(Objects::nonNull)
-                    .toList();
+                    .collect(Collectors.toMap(transaction ->
+                                    transaction.origin().name(),
+                            Function.identity(),
+                            (existing, replacement)-> existing
+                    ));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -33,14 +40,12 @@ public class TransactionalRepositoryImpl implements TransactionRepository{
 
     @Override
     public List<Transaction> findAll() {
-        return transactions;
+        return transactions.values().stream().toList();
     }
 
     @Override
     public Optional<Transaction> findByName(String name) {
-        return transactions.stream()
-                .filter(transaction -> transaction.origin().name().equals(name))
-                .findAny();
+        return Optional.ofNullable(transactions.get(name));
     }
 
     private Transaction creatTransaction(String line) {
