@@ -20,8 +20,8 @@ public class FraudAnalyzer {
         return transactions.stream().filter(Transaction::isFraud).toList();
     }
 
-    public int countTransactionsIsFraudSize(){
-        return transactionsIsFraud.size();
+    public Long countTransactionsIsFraudSize(){
+        return (long) transactionsIsFraud.size();
     }
 
     public void printTop3Frauds(){
@@ -36,7 +36,7 @@ public class FraudAnalyzer {
         return transactionsIsFraud.stream()
                 .filter(Transaction::isFraud)
                 .collect(Collectors.groupingBy(transaction ->
-                                transaction.origin().nameOrig(),
+                                transaction.origin().name(),
                                 Collectors.reducing(BigDecimal.ZERO,Transaction::amount,BigDecimal:: add)
                  ))
                 .entrySet()
