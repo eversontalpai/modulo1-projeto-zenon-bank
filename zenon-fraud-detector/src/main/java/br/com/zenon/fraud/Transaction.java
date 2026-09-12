@@ -22,4 +22,31 @@ public record Transaction(
             throw new IllegalArgumentException("amount should be positive: "+amount);
         }
     }
+    public static Transaction creatTransaction(String line) {
+        try {
+            String[] coluns = line.split(",");
+            return new Transaction(
+                    Integer.parseInt(coluns[0]),
+                    Type.valueOf(coluns[1]),
+                    new BigDecimal(coluns[2]),
+                    new Customer(
+                            coluns[3],
+                            new BigDecimal(coluns[4]),
+                            new BigDecimal(coluns[5])
+                    ),
+                    new Customer(
+                            coluns[6],
+                            new BigDecimal(coluns[7]),
+                            new BigDecimal(coluns[8])
+                    ),
+                    coluns[9].equals("1"),
+                    coluns[10].equals("1")
+
+
+            );
+        }catch (IllegalArgumentException e){
+            IO.println( "Erro: "+ line + e.getClass().getName()+": "+e.getMessage());
+        }
+        return null;
+    }
 }
