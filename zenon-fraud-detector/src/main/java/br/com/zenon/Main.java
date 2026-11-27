@@ -25,7 +25,7 @@ public class Main {
 
     private static void printReport() {
         TransactionReport report = new TransactionReport("PS_20174392719_1491204439457_log.csv");
-        report.printReport();
+        report.printReport("pt");
     }
 
     private static void calculateBenchmark() {
