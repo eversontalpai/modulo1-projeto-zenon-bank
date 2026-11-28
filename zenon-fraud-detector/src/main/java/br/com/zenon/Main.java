@@ -1,9 +1,11 @@
 package br.com.zenon;
 
 import br.com.zenon.analyzer.FraudAnalyzer;
+import br.com.zenon.config.ConnectionFactory;
 import br.com.zenon.fraud.Transaction;
 import br.com.zenon.report.TransactionReport;
 import br.com.zenon.repository.TransactionRepository;
+import br.com.zenon.repository.TransactionRepositoryImpl;
 import br.com.zenon.repository.TransactionalRepositoryImpl;
 import br.com.zenon.repository.TransactionalRepositoryMapImpl;
 
@@ -15,12 +17,18 @@ import java.util.List;
 public class Main {
     static void main() {
 
-//        fixErrors(repository);
+//        fixErrors();
 //        analyzerFraud();
 //        calculateBenchmark();
-        printReport();
+//        printReport();
 
-
+       TransactionRepositoryImpl rep = new TransactionRepositoryImpl();
+//       findName(rep);
+//       rep.findAll();
+        var startList = System.nanoTime();
+        rep.saveAll("PS_20174392719_1491204439457_log.csv",10_000);
+        var endList = System.nanoTime();
+        IO.println("Tempo para salvar: "+ (endList-startList));
     }
 
     private static void printReport() {

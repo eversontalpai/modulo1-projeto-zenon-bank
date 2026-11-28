@@ -9,4 +9,6 @@ import java.util.stream.Stream;
 public interface TransactionRepository {
     List<Transaction> findAll();
     Optional<Transaction> findByName(String name);
+    void saveAll(String fileName, Integer limit);
+
 }
