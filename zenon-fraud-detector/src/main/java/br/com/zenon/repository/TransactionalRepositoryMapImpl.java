@@ -13,10 +13,10 @@ import java.util.stream.Collectors;
 
 public class TransactionalRepositoryMapImpl implements TransactionRepository{
 
-    private final Map<String,Transaction> transactions;
+    private  Map<String,Transaction> transactions;
 
     public TransactionalRepositoryMapImpl(String fileName, int limit) {
-        this.transactions = read(fileName,limit);
+        saveAll(fileName,limit);
     }
 
     private Map<String,Transaction> read(String fileName, int limit) {
@@ -49,6 +49,11 @@ public class TransactionalRepositoryMapImpl implements TransactionRepository{
             return Optional.ofNullable(transactions
                     .get(name));
 
+    }
+
+    @Override
+    public void saveAll(String fileName, Integer limit) {
+        this.transactions = read(fileName,limit);
     }
 
 }

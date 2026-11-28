@@ -9,10 +9,10 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class TransactionalRepositoryImpl implements TransactionRepository{
-    private final List<Transaction> transactions;
+    private List<Transaction> transactions;
 
     public TransactionalRepositoryImpl(String fileName, int limit) {
-        this.transactions = read(fileName,limit);
+        saveAll(fileName,limit);
     }
 
     private List<Transaction> read(String fileName, int limit) {
@@ -39,6 +39,11 @@ public class TransactionalRepositoryImpl implements TransactionRepository{
                     .stream()
                     .filter(transaction -> transaction.origin().name().equals(name))
                     .findAny();
+    }
+
+    @Override
+    public void saveAll(String fileName, Integer limit) {
+        this.transactions = read(fileName,limit);
     }
 
 
